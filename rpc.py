@@ -2,7 +2,7 @@
 from xmlrpc.server import SimpleXMLRPCServer  
 from xmlrpc.client import ServerProxy
 from node import get_nodes, add_node
-
+from database import BlockChainDB
 server = None
 
 
@@ -17,8 +17,12 @@ class RpcServer():
         return True
     
     def get_blockchain(self):
+        dbd = BlockChainDB()
         return []
 
+    def add_block(self,block):
+        pass
+        
     def get_transactions(self):
         return []
     

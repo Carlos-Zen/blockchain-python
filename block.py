@@ -1,21 +1,51 @@
 # coding:utf-8
-import bitcoin
-class Block():
+import hashlib
+import time
+from model import Model
+
+class Block(Model):
+
     def __init__(self, index, timestamp, tx, previous_hash):
         self.index = index
         self.timestamp = timestamp
         self.tx = tx
         self.previous_block = previous_hash
-        self.next_block = previous_hash
 
-    def hash(self):
-        return bitcoin.sha256((str(self.index) + str(self.timestamp) + str(self.tx) + str(self.previous_block)).encode('utf-8'))
+    def header_hash(self):
+        """
+        Refer to bitcoin block header hash
+        """          
+        return hashlib.sha256((str(self.index) + str(self.timestamp) + str(self.tx) + str(self.previous_block)).encode('utf-8')).hexdigest()
 
-def coinbase():
+    def pow(self):
+        """
+        Proof of work. Add nouce to block.
+        """        
+        nouce = 0
+        while self.valid(nouce) is False:
+            nouce += 1
+        self.nouce = nouce
+        return nouce
+
+    def make(self, nouce):
+        """
+        Block hash generate. Add hash to block.
+        """
+        self.hash = self.ghash(nouce)
     
-    return Block(0, time.time(), {
-        "proof-of-work": 9,
-        "transactions": None},
-        "0")
-        
-class BlockChain():
+    def ghash(self, nouce):
+        """
+        Block hash generate.
+        """        
+        header_hash = self.header_hash()
+        token = f'{header_hash}{nouce}'.encode('utf-8')
+        return hashlib.sha256(token).hexdigest()
+
+    def valid(self, nouce):
+        """
+        Validates the Proof
+        """
+        return self.ghash(nouce)[:4] == "0000"
+
+    def to_dict(self):
+        return self.__dict__
