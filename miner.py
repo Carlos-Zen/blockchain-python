@@ -45,6 +45,7 @@ def mine():
     # Save block and transactions to database.
     BlockChainDB().insert(cb.to_dict())
     TransactionDB().insert(untxs)
+    return cb
 
 def init():
     """

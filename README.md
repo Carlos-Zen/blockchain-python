@@ -23,16 +23,23 @@ $ cd blockchain
 
 - Create Account
 ```
-$ python console.py createaccount
+$ python console.py account create
 ```
 - Run the miner.  
 ```
 $ python console.py miner   
 ``` 
-- Transaction.   
-
+- Transaction transfer.   
 ```
-$ python console.py trans to_address
+$ python console.py tx from_address to_address amount
+``` 
+- Transaction list.   
+```
+$ python console.py tx list
+``` 
+- Blockchain.   
+```
+$ python console.py blockchain from_address to_address amount
 ``` 
 
 # Introduce 
