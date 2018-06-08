@@ -27,7 +27,7 @@ $ python console.py account create
 ```
 - Run the miner.  
 ```
-$ python console.py miner   
+$ python console.py miner start 
 ``` 
 - Transaction transfer.   
 ```
