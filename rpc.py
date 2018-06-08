@@ -22,12 +22,21 @@ class RpcServer():
 
     def add_block(self,block):
         pass
-        
+
     def get_transactions(self):
         return []
     
     def get_nodes(self):
         return []
+
+class BroadCast():
+    def __getattr__(self,name):
+        def noname():
+            if name in ['new_block', 'new_transaction']:
+                cs = get_clients()
+                for c in cs: 
+                    getattr(c,name)
+        return noname
 
 def start_server(ip, port=8301):
     server = SimpleXMLRPCServer((ip, port))

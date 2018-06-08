@@ -49,3 +49,10 @@ class Block(Model):
 
     def to_dict(self):
         return self.__dict__
+
+    @staticmethod
+    def from_dict(cls, bdict):
+        b = cls(bdict['index'], bdict['timestamp'], bdict['tx'], bdict['previous_block'])
+        b.hash = bdict['hash']
+        b.nouce = bdict['nouce']
+        return b

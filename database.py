@@ -16,7 +16,11 @@ class BaseDB():
             return []
         with open(self.filepath,'r+') as f:
             raw = f.readline()
-        return json.loads(raw)
+        if len(raw) > 0:
+            data = json.loads(raw)
+        else:
+            data = []
+        return data
 
     def write(self, item):
         data = self.read()
@@ -90,8 +94,9 @@ class TransactionDB(BaseDB):
         for item in self.find_all():
             # vout receiver is addr and the vout hasn't spent yet.
             # 地址匹配且未花费
-            if item['vout']['receiver'] == addr and item['vout']['unspent'] == True:
-                unspent.append(item['vout'])
+            for vout in item['vout']:
+                if vout['receiver'] == addr and vout['unspent'] == True:
+                    unspent.append(vout)
         return unspent
 
     def insert(self, txs):

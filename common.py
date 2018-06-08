@@ -23,6 +23,12 @@ def random_key():
         + str(int(time.time() * 1000000))
     return hashlib.sha256(entropy.encode()).hexdigest()
 
+def unlock_sig(prikey, timestamp):
+    return hashlib.sha256((prikey+timestamp).encode()).hexdigest()
+
+def lock_sig(unlocksig, pubkey):
+    return hashlib.sha256((unlocksig+pubkey).encode()).hexdigest()
+
 def bin_hash160(string):
     intermed = hashlib.sha256(string).digest()
     digest = ''

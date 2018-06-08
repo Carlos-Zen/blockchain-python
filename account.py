@@ -11,7 +11,7 @@ def new_account():
     public_key = common.hash160(private_key.encode())
     address = pubkey_to_address(public_key.encode())
     adb = AccountDB()
-    adb.insert(address)
+    adb.insert({'pubkey': public_key, 'address':address})
     return private_key, public_key, address
 
 def get_account():

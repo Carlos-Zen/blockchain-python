@@ -4,6 +4,7 @@ import time
 from transaction import Vout, Transaction
 from account import get_account
 from database import BlockChainDB, TransactionDB, UnTransactionDB
+from common import unlock_sig, lock_sig
 
 MAX_COIN = 21000000
 REWARD = 20
@@ -37,12 +38,12 @@ def mine():
     # untxdb.clear()
     rw = reward()
     # Miner reward is the first transaction.
-    untx_hashes.insert(rw.hash)
+    untx_hashes.insert(0,rw.hash)
     cb = Block( last_block['index'] + 1, int(time.time()), untx_hashes, last_block['hash'])
     nouce = cb.pow()
     cb.make(nouce)
     # Save block and transactions to database.
-    BlockChainDB().insert(cb)
+    BlockChainDB().insert(cb.to_dict())
     TransactionDB().insert(untxs)
 
 def init():
@@ -52,4 +53,6 @@ def init():
     """
     pass
 
-coinbase()    
+# coinbase()
+# print(unlock_sig('ss','ss'))
+mine()
