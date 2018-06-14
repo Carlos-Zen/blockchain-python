@@ -2,6 +2,7 @@
 import hashlib
 import time
 from model import Model
+from rpc import BroadCast
 
 class Block(Model):
 
@@ -50,9 +51,13 @@ class Block(Model):
     def to_dict(self):
         return self.__dict__
 
-    @staticmethod
+    @classmethod
     def from_dict(cls, bdict):
         b = cls(bdict['index'], bdict['timestamp'], bdict['tx'], bdict['previous_block'])
         b.hash = bdict['hash']
         b.nouce = bdict['nouce']
         return b
+
+    @staticmethod
+    def spread(block):
+        BroadCast().new_block(block)

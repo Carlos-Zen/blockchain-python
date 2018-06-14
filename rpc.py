@@ -2,9 +2,9 @@
 from xmlrpc.server import SimpleXMLRPCServer  
 from xmlrpc.client import ServerProxy
 from node import get_nodes, add_node
-from database import BlockChainDB
+from database import BlockChainDB, UnTransactionDB, TransactionDB
+from common import cprint
 server = None
-
 
 PORT = 8301
 
@@ -17,25 +17,59 @@ class RpcServer():
         return True
     
     def get_blockchain(self):
-        dbd = BlockChainDB()
-        return []
+        bcdb = BlockChainDB()
+        return bcdb.find_all()
 
-    def add_block(self,block):
-        pass
+    def new_block(self,block):
+        cprint(__name__, block)
+        BlockChainDB().insert(block)
+        return True
 
     def get_transactions(self):
-        return []
+        tdb = TransactionDB()
+        return tdb.find_all()
+
+    def new_untransaction(self,untx):
+        cprint(__name__,untx)
+        UnTransactionDB().insert(untx)
+        return True
+
+    def blocked_transactions(self,txs):
+        TransactionDB().write(txs)
+        return True
+
+    def add_node(self, address):
+        add_node(address)
+        return True
+
+class RpcClient():
+
+    ALLOW_METHOD = ['get_transactions', 'get_blockchain', 'new_block', 'new_untransaction', 'blocked_transactions', 'ping', 'add_node']
+
+    def __init__(self, node):
+        self.node = node
+        self.client = ServerProxy(node)
     
-    def get_nodes(self):
-        return []
+    def __getattr__(self, name):
+        def noname(*args, **kw):
+            if name in self.ALLOW_METHOD:
+                return getattr(self.client, name)(*args, **kw)
+        return noname
 
 class BroadCast():
-    def __getattr__(self,name):
-        def noname():
-            if name in ['new_block', 'new_transaction']:
-                cs = get_clients()
-                for c in cs: 
-                    getattr(c,name)
+
+    def __getattr__(self, name):
+        def noname(*args, **kw):
+            cs = get_clients()
+            rs = []
+            for c in cs:
+                try:
+                    rs.append(getattr(c,name)(*args, **kw))
+                except ConnectionRefusedError:
+                    cprint('ERR', 'Connect node %s failed when calling method %s ' % (c.node,name))
+                else:
+                    cprint('INFO', 'Connect node %s successful calling method %s ' % (c.node,name))
+            return rs
         return noname
 
 def start_server(ip, port=8301):
@@ -47,6 +81,7 @@ def start_server(ip, port=8301):
 def get_clients():
     clients = []
     nodes = get_nodes()
+
     for node in nodes:
-        clients.append(ServerProxy(node))
+        clients.append(RpcClient(node))
     return clients

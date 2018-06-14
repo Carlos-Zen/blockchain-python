@@ -4,6 +4,7 @@ import random
 import time
 from ripemd import RIPEMD160
 import binascii
+import json
 
 code_strings = {
     2: '01',
@@ -13,6 +14,11 @@ code_strings = {
     58: '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz',
     256: ''.join([chr(x) for x in range(256)])
 }
+
+def cprint(tag,content):
+    print("[ %s ] : \r" % (tag,))
+    print(json.dumps(content, indent=4))
+
 def random_string(x):
     return str(os.urandom(x))
 

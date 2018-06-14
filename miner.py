@@ -10,7 +10,7 @@ MAX_COIN = 21000000
 REWARD = 20
 
 def reward():
-    reward = Vout(get_account(), REWARD)
+    reward = Vout(get_account()['address'], REWARD)
     tx = Transaction([], reward)
     return tx
 
@@ -32,11 +32,18 @@ def get_all_untransactions():
 
 def mine():
     last_block = BlockChainDB().last()
+    if len(last_block) == 0:
+        last_block = coinbase().to_dict()
     untxdb = UnTransactionDB()
-    untxs = untxdb.find_all()
-    untx_hashes = untxdb.all_hashes()
-    # untxdb.clear()
+    # Miner reward
     rw = reward()
+    untxs = untxdb.find_all()
+    untxs.append(rw)
+    untxs_dict = [untx.to_dict() for untx in untxs]
+    untx_hashes = untxdb.all_hashes()
+    # Clear the untransaction database.
+    untxdb.clear()
+
     # Miner reward is the first transaction.
     untx_hashes.insert(0,rw.hash)
     cb = Block( last_block['index'] + 1, int(time.time()), untx_hashes, last_block['hash'])
@@ -44,7 +51,10 @@ def mine():
     cb.make(nouce)
     # Save block and transactions to database.
     BlockChainDB().insert(cb.to_dict())
-    TransactionDB().insert(untxs)
+    TransactionDB().insert(untxs_dict)
+    # Broadcast to other nodes
+    Block.spread(cb.to_dict())
+    Transaction.blocked_spread(untxs_dict)
     return cb
 
 def init():
@@ -56,4 +66,4 @@ def init():
 
 # coinbase()
 # print(unlock_sig('ss','ss'))
-mine()
+# mine()

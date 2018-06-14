@@ -8,57 +8,71 @@ import sys
 from miner import mine
 import multiprocessing
 import rpc 
+from node import *
+from common import cprint
 
-MODULES = ['account','tx','blockchain','miner']
-def pprint(tag,content):
-    max = 12
-    if len(tag) < max:
-        tag = tag + (max-len(tag)) * ' '
-    print("[ %s ] : \n %s \n" % (tag,content))
+MODULES = ['account','tx','blockchain','miner','node']
 
 def upper_first(string):
     return string[0].upper()+string[1:]
 
-class Miner():
-    def start(self, args):
-        print(args)
+class Node():
+
+    def add(self, args):
+        add_node(args[0])
+        rpc.BroadCast().add_node(args[0])
+        cprint('Allnode',get_nodes())
+    
+    def run(self, args):
         p = multiprocessing.Process(target=rpc.start_server,args=('127.0.0.1',int(args[0])))
         p.start()
-        print('s')
+
+class Miner():
+    def start(self, args):
+        if get_account() == None:
+            cprint('ERROR','Please create account before start miner.')
+            exit
+        p = multiprocessing.Process(target=rpc.start_server,args=('127.0.0.1',int(args[0])))
+        p.start()
         while True :
-            pprint('Miner new block',mine().to_dict())
+            cprint('Miner new block',mine().to_dict())
 
 class Account():
-
-    def create(self):
+    def create(self, args):
         ac = new_account()
-        pprint('MESSAGE','===Please remember your private key===')
-        pprint('Private Key',ac[0])
-        pprint('Public Key',ac[1])
-        pprint('Address',ac[2])
+        cprint('MESSAGE','===Please remember your private key===')
+        cprint('Private Key',ac[0])
+        cprint('Public Key',ac[1])
+        cprint('Address',ac[2])
 
-    def get(self):
-        pprint('All Account',AccountDB().read())
+    def get(self, args):
+        cprint('All Account',AccountDB().read())
 
 class Blockchain():
 
     def list(self):
         for t in BlockChainDB().find_all():
-            pprint('Blockchain',str(t))
+            cprint('Blockchain',str(t))
 
 class Tx():
 
     def list(self):
         for t in TransactionDB().find_all():
-            pprint('Transaction',str(t))
+            cprint('Transaction',str(t))
 
-    def new(self,args):
-        pass
+    def transfer(self,args):
+        tx = Transaction.transfer(args[0], args[1], args[2])
+        print(Transaction.unblock_spread(tx))
+        cprint('Transaction tranfer',tx)
 
 if __name__ == '__main__':
     module = sys.argv[1]
     if module not in MODULES:
-        pprint('Error', 'First arg shoud in %s' % (str(MODULES,)))
+        cprint('Error', 'First arg shoud in %s' % (str(MODULES,)))
     mob = globals()[upper_first(module)]()
     method = sys.argv[2]
-    getattr(mob, method)(sys.argv[3:])
+    print(sys.argv[3:])
+    try:
+        getattr(mob, method)(sys.argv[3:])
+    except AttributeError as e:
+        cprint('ERR',str(e))

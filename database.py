@@ -2,13 +2,29 @@
 import json
 import os
 
-BLOCKFILE = 'data/blockchain'
-TXFILE = 'data/tx'
-UNTXFILE = 'data/untx'
-ACCOUNTFILE = 'data/account'
+BASEDBPATH = 'data'
+BLOCKFILE = 'blockchain'
+TXFILE = 'tx'
+UNTXFILE = 'untx'
+ACCOUNTFILE = 'account'
+NODEFILE = 'node'
 
 class BaseDB():
+
     filepath = ''
+
+    def __init__(self):
+        self.set_path()
+        self.filepath = '/'.join((BASEDBPATH, self.filepath))
+
+    def set_path(self):
+        pass
+
+    def find_all(self):
+        return self.read()
+
+    def insert(self, item):
+        self.write(item)  
 
     def read(self):
         raw = ''
@@ -24,7 +40,10 @@ class BaseDB():
 
     def write(self, item):
         data = self.read()
-        data.append(item)
+        if isinstance(item,list):
+            data = data + item
+        else:
+            data.append(item)
         with open(self.filepath,'w+') as f:
             f.write(json.dumps(data))
         return True
@@ -33,25 +52,25 @@ class BaseDB():
         with open(self.filepath,'w+') as f:
             f.write('')
 
-class AccountDB(BaseDB):
+class NodeDB(BaseDB):
 
-    def __init__(self):
+    def set_path(self):
+        self.filepath = NODEFILE  
+
+
+class AccountDB(BaseDB):
+    def set_path(self):
         self.filepath = ACCOUNTFILE  
 
     def find_one(self):
         ac = self.read()
         return ac[0]
 
-    def insert(self, account):
-        self.write(account)  
 
 class BlockChainDB(BaseDB):
 
-    def __init__(self):
+    def set_path(self):
         self.filepath = BLOCKFILE
-
-    def find_all(self):
-        return self.read()
 
     def last(self):
         bc = self.read()
@@ -68,18 +87,12 @@ class BlockChainDB(BaseDB):
                 break
         return one
 
-    def insert(self, block):
-        self.write(block)
-
 class TransactionDB(BaseDB):
     """
     Transactions that save with blockchain.
     """
-    def __init__(self):
+    def set_path(self):
         self.filepath = TXFILE
-    
-    def find_all(self):
-       return self.read() 
 
     def find(self, hash):
         one = {}
@@ -89,15 +102,7 @@ class TransactionDB(BaseDB):
                 break
         return one
 
-    def find_unspent(self, addr):
-        unspent = []
-        for item in self.find_all():
-            # vout receiver is addr and the vout hasn't spent yet.
-            # 地址匹配且未花费
-            for vout in item['vout']:
-                if vout['receiver'] == addr and vout['unspent'] == True:
-                    unspent.append(vout)
-        return unspent
+
 
     def insert(self, txs):
         if isinstance(txs, dict):
@@ -109,7 +114,7 @@ class UnTransactionDB(TransactionDB):
     """
     Transactions that doesn't store in blockchain.
     """
-    def __init__(self):
+    def set_path(self):
         self.filepath = UNTXFILE
 
     def all_hashes(self):
