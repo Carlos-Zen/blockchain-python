@@ -27,20 +27,30 @@ $ python console.py account create
 ```
 - Run the miner.  
 ```
-$ python console.py miner start 
+$ python console.py miner start 3008
 ``` 
 - Transaction transfer.   
 ```
-$ python console.py tx from_address to_address amount
+$ python console.py tx transfer from_address to_address amount
 ``` 
 - Transaction list.   
 ```
 $ python console.py tx list
 ``` 
-- Blockchain.   
+- Blockchain shows.   
 ```
-$ python console.py blockchain from_address to_address amount
+$ python console.py blockchain list
 ``` 
+### Node Network
+Copy the code resource to a new directory.Then:
+- Add another node
+```
+$ cd thenewpath
+$ python console.py node run 3009
+$ cd thepathbefore
+$ python console.py node add 127.0.0.1:3009
+``` 
+When a new block mined , block and transactions will broadcast to other nodes.
 
 # Introduce 
 ## About block
