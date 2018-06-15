@@ -24,13 +24,11 @@ class Vout(Model):
         """
         Exclude all consumed VOUT, get unconsumed VOUT
         
-        排除所有已消费的VOUT，获得未消费VOUT
         """
         unspent = []
         all_tx = TransactionDB().find_all()
         spend_vin = []
         [spend_vin.extend(item['vin']) for item in all_tx]
-        print(spend_vin)
         has_spend_hash = [vin['hash'] for vin in spend_vin]
         for item in all_tx:
             # Vout receiver is addr and the vout hasn't spent yet.
@@ -38,8 +36,7 @@ class Vout(Model):
             for vout in item['vout']:
                 if vout['receiver'] == addr and vout['hash'] not in has_spend_hash:
                     unspent.append(vout)
-                    
-        return [cls(tx['receiver'], tx['amount']) for tx in unspent]
+        return [Vin(tx['hash'], tx['amount']) for tx in unspent]
 
 class Transaction():
     def __init__(self, vin, vout,):
@@ -56,8 +53,9 @@ class Transaction():
         if not isinstance(amount,int):
             amount = int(amount)
         unspents = Vout.get_unspent(from_addr)
-        ready_vout, change = select_outputs_greedy(unspents, amount)
-        vin = [Vin(vo.hash,vo.amount) for vo in ready_vout]
+        ready_utxo, change = select_outputs_greedy(unspents, amount)
+        print('ready_utxo', ready_utxo[0].to_dict())
+        vin = ready_utxo
         vout = []
         vout.append(Vout(to_addr, amount))
         vout.append(Vout(from_addr, change))

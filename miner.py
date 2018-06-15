@@ -60,9 +60,3 @@ def mine():
     Block.spread(cb.to_dict())
     Transaction.blocked_spread(untxs)
     return cb
-
-def init():
-    """
-    Init download blockchain from block network before starting miner.
-    """
-    pass

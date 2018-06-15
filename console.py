@@ -39,7 +39,6 @@ class Miner():
 class Account():
     def create(self, args):
         ac = new_account()
-        cprint('MESSAGE','===Please remember your private key===')
         cprint('Private Key',ac[0])
         cprint('Public Key',ac[1])
         cprint('Address',ac[2])

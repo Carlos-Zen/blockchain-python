@@ -70,9 +70,9 @@ class BroadCast():
                 try:
                     rs.append(getattr(c,name)(*args, **kw))
                 except ConnectionRefusedError:
-                    cprint('WARN', 'Connect node %s failed when calling method %s , please check the node.' % (c.node,name))
+                    cprint('WARN', 'Contact with node %s failed when calling method %s , please check the node.' % (c.node,name))
                 else:
-                    cprint('INFO', 'Connect node %s successful calling method %s , please check the node.' % (c.node,name))
+                    cprint('INFO', 'Contact with node %s successful calling method %s .' % (c.node,name))
             return rs
         return noname
 

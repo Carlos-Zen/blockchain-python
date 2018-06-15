@@ -52,6 +52,14 @@ class BaseDB():
         with open(self.filepath,'w+') as f:
             f.write('')
 
+    def hash_insert(self, item):
+        exists = False
+        for i in self.find_all():
+            if item['hash'] == i['hash']:
+                exists = True
+        if not exists:
+            self.write(item)  
+
 class NodeDB(BaseDB):
 
     def set_path(self):
@@ -87,6 +95,9 @@ class BlockChainDB(BaseDB):
                 break
         return one
 
+    def insert(self, item):
+        self.hash_insert(item)
+
 class TransactionDB(BaseDB):
     """
     Transactions that save with blockchain.
@@ -102,13 +113,8 @@ class TransactionDB(BaseDB):
                 break
         return one
 
-
-
-    def insert(self, txs):
-        if isinstance(txs, dict):
-            txs = [txs]
-        for tx in txs:
-            self.write(tx)
+    def insert(self, tx):
+        self.hash_insert(tx)
 
 class UnTransactionDB(TransactionDB):
     """
