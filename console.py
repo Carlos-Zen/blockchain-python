@@ -27,6 +27,10 @@ class Node():
     def run(self, args):
         start_node(args[0])
 
+    def list(self, args):
+        for t in NodeDB().find_all():
+            cprint('Node',t)
+
 class Miner():
     def start(self, args):
         if get_account() == None:
@@ -45,6 +49,9 @@ class Account():
 
     def get(self, args):
         cprint('All Account',AccountDB().read())
+
+    def current(self, args):
+        cprint('Current Account', get_account())
 
 class Blockchain():
 
