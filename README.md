@@ -1,14 +1,10 @@
-# Simple Blockchain   
+# Blockchain-python
 
 A blockchain implementation in Python only for study.
 
-The simple blockchain implements simple blockchain and transactions. Currently, the implementation already has mining, transaction, communication between nodes, and file persistence of blocks and transactions.   
+The Blockchain-python implements simple blockchain and transactions. Currently, the implementation already has mining, transaction, communication between nodes, and file persistence of blocks and transactions.   
 The communication between nodes is via rpc based on http, rather than p2p network. Because the implementation of P2p is more complicated, it is too complicated to understand the framework of blockchain.   
 The verification based on cryptography has not yet been realized, and the verification of blocks between nodes and the verification of transactions have not yet been realized.
-
-简单区块链实现了简单的区块链和交易，目前实现已经具备了挖矿、交易、节点间通讯、以及区块和交易的文件持久化。
-节点间通讯通过建立在http基础之上的rpc，而非p2p网络，因为P2p的实现比较复杂，对于了解区块链的框架来说过于复杂。
-建立在密码学基础上的校验暂未实现，节点间对区块的校验，以及交易的校验目前还未能实现。
 
 ## Installation
 
@@ -55,6 +51,7 @@ When a new block mined , block and transactions will broadcast to other nodes.
 # Introduce 
 ## About block
 The blockchain is a data structure that is linked sequentially from back to forward by blocks containing transaction information. SHA256 cryptographic hashing is performed on each block header to generate a hash value. A bitcoin block is as follows:   
+
 区块链是由包含交易信息的区块从后向前有序链接起来的数据结构,对每个区块头进行SHA256加密哈希，可生成一个哈希值。一个比特币区块如下：   
 ```
 {
@@ -74,14 +71,31 @@ The blockchain is a data structure that is linked sequentially from back to forw
 ```
 A blockchain is a linked list structure of blocks. The essence of mining is a new block, based on existing information such as parent block hash, timestamp, transaction merkle hash, plus a nonce (number from 0)   
 A sha256 representation string is generated after the connection. If the preceding digits start with several zeroes, the number of zeros is the difficulty of mining, and half is dynamically adjusted based on the remaining number and the generation speed of the previous block, such as:   
-
-区块链就是区块组成的链表结构。而挖矿的本质就是一个新区块，根据现有的一些信息比如父区块hash、时间戳、交易的merkle数根hash再加上一个nonce(从0开始增长的数字)    
-连接后生成一个sha256的表现字符串。如果前面数位是几个0开头，0的个数就是挖矿难度，一半根据剩余数量和上一个区块的生成速度动态调整，比如:   
 ```
 00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249
 ```
 Successful mining, block generation   
-挖矿成功，区块生成   
+
+### About Blockchain-python block
+
+Blockchain-python simplified block structure, a blockchain-python block data is as follows:
+```
+{
+	"index": 7,
+	"timestamp": 1528972070,
+	"tx": [
+        "b959b3d2099ca304c67087edbf05b79d1f2501b1f407df5e51a1a8c22bb3334d",
+        "613e4af7266e01ea338d30681ef606bad26e4cdfa4ec7a6f431e22420c8291fd",
+        "be7095a764cb241606a67c9064bc8dbc2da2370d49459bd492473ea5ce304cb3"
+    ],
+	"previous_block": "00003e17e04d9c9d2c2f5629de20bda58f59af36417a7e50eb77a74a028b026a",
+	"nouce": 11063,
+	"hash": "00006805c75d0db1685616d9ea5730f6203eda744a16fcc78ef1f3c244083ea4"
+}
+```
+The calculation of block hash is roughly the same as that of Bitcoin. Our difficulty setting is relatively low, so the hash in front of this block has only 4 zeros.    
+This is for easier mining to understand the principle and generally can be produced in a few seconds. One block. In addition, Bitcoin's tx field represents the root node hash of the merkle tree that consists of the transaction hash.    
+For simplicity, we put it directly into the array of transaction hash.   
 
 ## About miner
 
@@ -92,17 +106,10 @@ There will be rewards for mining, and the reward will be recorded as the first t
 - The miner also gets the amount entered for all transactions in the block - the amount of money that was exported
 - There will be some sorting rules for the transactions to be certified, sorting according to the block age, transaction fee, transaction amount, etc.
 
-We simplified the implementation and only implemented rewards. Rewards will be awarded to the current account.
-
-挖矿算法使用的sha256，比特币的算法是根据区块头信息+Nouce(一个数字）作为字符串。简单区块链简化的头部信息，但是机制和比特币是一直的。
-区块链在本地以json格式化存储在文件中。一个区块的生成与交易信息是有关联的，所以区块存储的同时，交易信息也会存储下来。
-挖矿会有奖励，奖励会作为区块链的第一笔交易记录下来.
-- 挖矿的奖励一个是来源于生成区块本身的奖励
-- 矿工还会获取纳入区块中的所有交易 输入的金额-输出的金额 的金额
-- 待认证的交易会有一些排序规则，根据区块链龄，交易费，交易金额等来做排序
-
-我们简化了实现，只实现奖励的机制。奖励会奖励给当前账户。
-
+We simplified the implementation and only implemented rewards. The reward will be awarded to the current account. If the current account does not exist, please generate an account through the following command line:
+```
+$ python console.py account create
+```
 
 ## About network 
 
@@ -112,22 +119,16 @@ The blockchain network is a P2P (Peer-to-Peer, end-to-end) network. We use Pytho
 - The new node will synchronize all the data of other node's blockchain while ensuring the maximum chain   
 - Digging out new blocks will notify other nodes to synchronize   
 
-区块链网络是一个 P2P（Peer-to-Peer，端到端）的网络。我们为了简单化，使用了python自带的RPC机制。   
-- 通过添加节点操作，可以联通不同节点   
-- 联通的节点会自动传播新的交易信息
-- 新节点会同步其他节点的区块链的所有数据，同时保证最大链条
-- 挖出新的区块会通知其他节点同步   
-
-
-
 ## About transaction
-比特币采用的是 UTXO 模型,并不直接存在“余额”这个概念，余额需要通过遍历整个交易历史得来。我们也实现这个机制。
-![tx](./img/blockchain-info-tx.png)
-一笔交易由一些输入（input）和输出（output）组合而来，在我们的交易中，也会接受多个输入然后产生多个输出。
-- 输出会包含一个锁定脚本(`ScriptPubKey`)，要花这笔钱，必须要解锁该脚本
-- 交易会有严格的校验过程
 
-我们的实现会简化这个过程，通过一个字段unspent来表示是否花费，也省区了校验的过程。
+Bitcoin uses the UTXO model and does not directly exist in the concept of “balance”. The balance needs to be obtained by traversing the entire transaction history. We also implement this mechanism.
+A transaction is a combination of some input and output. In our transaction, we accept multiple inputs and generate multiple outputs.
+- The calculation of the balance is made through the unconsumed verified transaction output - the output of the consumer transaction, which is commonly known as UTXO
+- Transactions not placed in new block will be broadcast to all nodes waiting to be verified
+- After waiting for the miner to dig into a new block, the trade will be saved as transaction information in the transaction database.
+
+The correctness check of the transaction is under development.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
