@@ -58,7 +58,6 @@ $ python console.py node add 127.0.0.1:3009
 
 ## 命令行大全
 使用如下:   
-
 ```
 $ python console.py [module] [action] params...
 ```
@@ -106,7 +105,7 @@ $ python console.py tx list
 连接后生成一个sha256的表现字符串。如果前面数位是几个0开头，0的个数就是挖矿难度，一半根据剩余数量和上一个区块的生成速度动态调整，比如:   
 ```
 00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249
-```  
+```
 挖矿成功，区块生成。   
 
 ### Blockchain-python区块简述
