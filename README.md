@@ -74,8 +74,7 @@ $ python console.py tx list
 # Introduce 
 ## About block
 The blockchain is a data structure that is linked sequentially from back to forward by blocks containing transaction information. SHA256 cryptographic hashing is performed on each block header to generate a hash value. A bitcoin block is as follows:   
-
-区块链是由包含交易信息的区块从后向前有序链接起来的数据结构,对每个区块头进行SHA256加密哈希，可生成一个哈希值。一个比特币区块如下：   
+  
 ```
 {
  "size":43560,
