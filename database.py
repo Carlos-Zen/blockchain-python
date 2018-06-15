@@ -57,6 +57,7 @@ class BaseDB():
         for i in self.find_all():
             if item['hash'] == i['hash']:
                 exists = True
+                break
         if not exists:
             self.write(item)  
 
@@ -113,8 +114,11 @@ class TransactionDB(BaseDB):
                 break
         return one
 
-    def insert(self, tx):
-        self.hash_insert(tx)
+    def insert(self, txs):
+        if not isinstance(txs,list):
+            txs = [txs]
+        for tx in txs:
+            self.hash_insert(tx)
 
 class UnTransactionDB(TransactionDB):
     """

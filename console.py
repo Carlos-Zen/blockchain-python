@@ -48,7 +48,7 @@ class Account():
 
 class Blockchain():
 
-    def list(self):
+    def list(self, args):
         for t in BlockChainDB().find_all():
             cprint('Blockchain',str(t))
 
@@ -93,5 +93,5 @@ if __name__ == '__main__':
     method = sys.argv[2]
     # try:
     getattr(mob, method)(sys.argv[3:])
-    # except AttributeError as e:
-    #     cprint('ERROR',str(e))
+    # except Exception as e:
+    #     cprint('ERROR','/(ㄒoㄒ)/~~, Maybe command params get wrong, please check and try again.')
