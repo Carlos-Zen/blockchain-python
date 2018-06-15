@@ -2,7 +2,7 @@ import os
 import hashlib
 import random
 import time
-from ripemd import RIPEMD160
+from lib.ripemd import RIPEMD160
 import binascii
 import json
 

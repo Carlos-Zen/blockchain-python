@@ -3,7 +3,7 @@ from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.client import ServerProxy
 from node import get_nodes, add_node
 from database import BlockChainDB, UnTransactionDB, TransactionDB
-from common import cprint
+from lib.common import cprint
 server = None
 
 PORT = 8301

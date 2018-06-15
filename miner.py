@@ -4,7 +4,7 @@ import time
 from transaction import Vout, Transaction
 from account import get_account
 from database import BlockChainDB, TransactionDB, UnTransactionDB
-from common import unlock_sig, lock_sig
+from lib.common import unlock_sig, lock_sig
 
 MAX_COIN = 21000000
 REWARD = 20

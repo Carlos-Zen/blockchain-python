@@ -9,7 +9,7 @@ from miner import mine
 import multiprocessing
 import rpc 
 from node import *
-from common import cprint
+from lib.common import cprint
 import inspect
 
 MODULES = ['account','tx','blockchain','miner','node']
