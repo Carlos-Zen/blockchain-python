@@ -21,30 +21,30 @@ $ cd blockchain
 
 - Create Account
 ```
-$ python console.py account create
+$ python console account create
 ```
 - Run the miner
 ```
-$ python console.py miner start 3008
+$ python console miner start 3008
 ```
 - Transaction transfer.   
 ```
-$ python console.py tx transfer from_address to_address amount
+$ python console tx transfer from_address to_address amount
 ```
 - Transaction list.   
 ```
-$ python console.py tx list
+$ python console tx list
 ```
 - Blockchain shows.   
 ```
-$ python console.py blockchain list
+$ python console blockchain list
 ```
 ### Node Network
 Copy the code resource to a new directory.While the miner before was running then:
 ```
 $ cd {another_blockchain_directory}
-$ python console.py node add 3008 
-$ python console.py node run 3009
+$ python console node add 3008 
+$ python console node run 3009
 ```
 When a new block mined , block and transactions will broadcast to other nodes.
 
@@ -52,11 +52,11 @@ When a new block mined , block and transactions will broadcast to other nodes.
 Use like this:   
 
 ```
-$ python console.py [module] [action] params...
+$ python console [module] [action] params...
 ```
 Such as:
 ```
-$ python console.py tx list
+$ python console tx list
 ```
 
 |  Module  |  Action    |  Params                            |  Desc                                            |
@@ -130,7 +130,7 @@ There will be rewards for mining, and the reward will be recorded as the first t
 
 We simplified the implementation and only implemented rewards. The reward will be awarded to the current account. If the current account does not exist, please generate an account through the following command line:
 ```
-$ python console.py account create
+$ python console account create
 ```
 
 ## About network 

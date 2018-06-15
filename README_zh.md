@@ -21,23 +21,23 @@ $ cd blockchain
 
 - 创建账户
 ```
-$ python console.py account create
+$ python console account create
 ```
 - 开始挖矿
 ```
-$ python console.py miner start 3008
+$ python console miner start 3008
 ```
 - 转账交易
 ```
-$ python console.py tx transfer from_address to_address amount
+$ python console tx transfer from_address to_address amount
 ```
 - 交易记录
 ```
-$ python console.py tx list
+$ python console tx list
 ```
 - 查看所有区块
 ```
-$ python console.py blockchain list
+$ python console blockchain list
 ```
 
 ### 节点网络
@@ -46,12 +46,12 @@ $ python console.py blockchain list
 - 启动新节点   
 ```
 $ cd {another_blockchain_directory}
-$ python console.py node add 3008 
-$ python console.py node run 3009
+$ python console node add 3008 
+$ python console node run 3009
 ```
 - 回到初始的源码目录下，要保证挖矿正在进行当中，然后添加新的节点：   
 ```
-$ python console.py node add 127.0.0.1:3009
+$ python console node add 127.0.0.1:3009
 ```
 当一个新的区块块被挖掘时，新的区块和交易将广播给其他节点。
 多个节点情况下，只要一个节点被添加，所有节点网络会同步。
@@ -59,11 +59,11 @@ $ python console.py node add 127.0.0.1:3009
 ## 命令行大全
 使用如下:   
 ```
-$ python console.py [module] [action] params...
+$ python console [module] [action] params...
 ```
 比如:
 ```
-$ python console.py tx list
+$ python console tx list
 ```
 
 |  Module  |  Action    |  Params                            |  Desc                                            |
@@ -138,7 +138,7 @@ Blockchain-python简化的区块结构，一个Blockchain-python的区块数据�
 
 我们简化了实现，只实现奖励的机制。奖励会奖励给当前账户，如果当前账户不存在，请通过下面的命令行生成一个账户：
 ```
-$ python console.py account create
+$ python console account create
 ```
 
 ## 关于节点网络
