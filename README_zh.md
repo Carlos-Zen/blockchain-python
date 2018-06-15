@@ -26,19 +26,19 @@ $ python console.py account create
 - 开始挖矿
 ```
 $ python console.py miner start 3008
-``` 
+```
 - 转账交易
 ```
 $ python console.py tx transfer from_address to_address amount
-``` 
+```
 - 交易记录
 ```
 $ python console.py tx list
-``` 
+```
 - 查看所有区块
 ```
 $ python console.py blockchain list
-``` 
+```
 
 ### 节点网络
 
@@ -46,16 +46,40 @@ $ python console.py blockchain list
 - 启动新节点   
 ```
 $ cd {another_blockchain_directory}
+$ python console.py node add 3008 
 $ python console.py node run 3009
 ```
 - 回到初始的源码目录下，要保证挖矿正在进行当中，然后添加新的节点：   
 ```
 $ python console.py node add 127.0.0.1:3009
-``` 
+```
 当一个新的区块块被挖掘时，新的区块和交易将广播给其他节点。
 多个节点情况下，只要一个节点被添加，所有节点网络会同步。
 
-# 区块链原理简介 
+## 命令行大全
+使用如下:   
+
+```
+$ python console.py [module] [action] params...
+```
+比如:
+```
+$ python console.py tx list
+```
+
+|  Module  |  Action    |  Params                            |  Desc                                            |
+|----------|------------|------------------------------------|--------------------------------------------------|
+| account  |  create    |  NONEED                            |  建立新帐户                                       |
+| account  |  get       |  NONEED                            |  显示所有帐户                                     |
+| account  |  current   |  NONEED                            |  矿工奖励账户                                     |
+| miner    |  start     |  ip:port/port                      |  如3008或127.0.0.1:3008                          |
+| node     |  run       |  ip:port/port                      |  如3008或127.0.0.1:3008                          |
+| node     |  list      |  NONEED                            |  显示将广播到的所有节点                            |
+| node     |  add       |  ip:port                           |  添加一个将广播到的节点                            |
+| tx       |  transfer  |  from_address to_address   amount  |  coin从from_address转移到to_address               |
+| tx       |  list      |  NONEED                            |  显示所有交易                                     |
+
+# 原理简介 
 
 ## 关于区块
 
