@@ -16,8 +16,10 @@ code_strings = {
 }
 
 def cprint(tag,content):
-    print("[ %s ] : \r" % (tag,))
-    print(json.dumps(content, indent=4))
+    print("[ %s ]" % (tag,))
+    if not isinstance(content,str):
+        content = json.dumps(content, indent=4)
+    print(' ' * 2 + content)
 
 def random_string(x):
     return str(os.urandom(x))

@@ -31,6 +31,10 @@ def get_all_untransactions():
     UnTransactionDB().all_hashes()
 
 def mine():
+    """
+    Main miner method.
+    """
+    # Found last block and unchecked transactions.
     last_block = BlockChainDB().last()
     if len(last_block) == 0:
         last_block = coinbase().to_dict()
@@ -60,10 +64,5 @@ def mine():
 def init():
     """
     Init download blockchain from block network before starting miner.
-    在开始挖矿前，初始化会从区块网络上下载完整区块链条
     """
     pass
-
-# coinbase()
-# print(unlock_sig('ss','ss'))
-# mine()

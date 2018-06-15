@@ -10,6 +10,7 @@ import multiprocessing
 import rpc 
 from node import *
 from common import cprint
+import inspect
 
 MODULES = ['account','tx','blockchain','miner','node']
 
@@ -24,16 +25,14 @@ class Node():
         cprint('Allnode',get_nodes())
     
     def run(self, args):
-        p = multiprocessing.Process(target=rpc.start_server,args=('127.0.0.1',int(args[0])))
-        p.start()
+        start_node(args[0])
 
 class Miner():
     def start(self, args):
         if get_account() == None:
             cprint('ERROR','Please create account before start miner.')
-            exit
-        p = multiprocessing.Process(target=rpc.start_server,args=('127.0.0.1',int(args[0])))
-        p.start()
+            exit()
+        start_node(args[0])
         while True :
             cprint('Miner new block',mine().to_dict())
 
@@ -65,13 +64,34 @@ class Tx():
         print(Transaction.unblock_spread(tx))
         cprint('Transaction tranfer',tx)
 
+def usage(class_name):
+    module = globals()[upper_first(class_name)]
+    print('  ' + class_name + '\r')
+    print('    [action]\r')
+    for k,v in module.__dict__.items():
+        if callable(v):
+            print('      %s' % (k,))
+    print('\r')
+
+def help():
+    print("Usage: python console.py [module] [action]\r")
+    print('[module]\n')
+    for m in MODULES:
+        usage(m)
+
 if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        help()
+        exit()
     module = sys.argv[1]
+    if module == 'help':
+        help()
+        exit()
     if module not in MODULES:
         cprint('Error', 'First arg shoud in %s' % (str(MODULES,)))
+        exit()
     mob = globals()[upper_first(module)]()
     method = sys.argv[2]
-    print(sys.argv[3:])
     try:
         getattr(mob, method)(sys.argv[3:])
     except AttributeError as e:
