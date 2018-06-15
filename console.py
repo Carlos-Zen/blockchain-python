@@ -55,11 +55,11 @@ class Blockchain():
 
 class Tx():
 
-    def list(self):
+    def list(self, args):
         for t in TransactionDB().find_all():
-            cprint('Transaction',str(t))
+            cprint('Transaction',t)
 
-    def transfer(self,args):
+    def transfer(self, args):
         tx = Transaction.transfer(args[0], args[1], args[2])
         print(Transaction.unblock_spread(tx))
         cprint('Transaction tranfer',tx)
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         exit()
     mob = globals()[upper_first(module)]()
     method = sys.argv[2]
-    try:
-        getattr(mob, method)(sys.argv[3:])
-    except AttributeError as e:
-        cprint('ERR',str(e))
+    # try:
+    getattr(mob, method)(sys.argv[3:])
+    # except AttributeError as e:
+    #     cprint('ERROR',str(e))

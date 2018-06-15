@@ -42,8 +42,8 @@ def mine():
     # Miner reward
     rw = reward()
     untxs = untxdb.find_all()
-    untxs.append(rw)
-    untxs_dict = [untx.to_dict() for untx in untxs]
+    untxs.append(rw.to_dict())
+    # untxs_dict = [untx.to_dict() for untx in untxs]
     untx_hashes = untxdb.all_hashes()
     # Clear the untransaction database.
     untxdb.clear()
@@ -55,10 +55,10 @@ def mine():
     cb.make(nouce)
     # Save block and transactions to database.
     BlockChainDB().insert(cb.to_dict())
-    TransactionDB().insert(untxs_dict)
+    TransactionDB().insert(untxs)
     # Broadcast to other nodes
     Block.spread(cb.to_dict())
-    Transaction.blocked_spread(untxs_dict)
+    Transaction.blocked_spread(untxs)
     return cb
 
 def init():

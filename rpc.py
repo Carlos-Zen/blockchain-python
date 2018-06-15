@@ -23,6 +23,8 @@ class RpcServer():
     def new_block(self,block):
         cprint(__name__, block)
         BlockChainDB().insert(block)
+        UnTransactionDB().clear()
+        cprint('INFO',"Receive new block.")
         return True
 
     def get_transactions(self):
@@ -32,10 +34,12 @@ class RpcServer():
     def new_untransaction(self,untx):
         cprint(__name__,untx)
         UnTransactionDB().insert(untx)
+        cprint('INFO',"Receive new unchecked transaction.")
         return True
 
     def blocked_transactions(self,txs):
         TransactionDB().write(txs)
+        cprint('INFO',"Receive new blocked transactions.")
         return True
 
     def add_node(self, address):
@@ -66,9 +70,9 @@ class BroadCast():
                 try:
                     rs.append(getattr(c,name)(*args, **kw))
                 except ConnectionRefusedError:
-                    cprint('ERR', 'Connect node %s failed when calling method %s ' % (c.node,name))
+                    cprint('WARN', 'Connect node %s failed when calling method %s , please check the node.' % (c.node,name))
                 else:
-                    cprint('INFO', 'Connect node %s successful calling method %s ' % (c.node,name))
+                    cprint('INFO', 'Connect node %s successful calling method %s , please check the node.' % (c.node,name))
             return rs
         return noname
 
