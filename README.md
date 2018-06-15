@@ -23,52 +23,53 @@ $ cd blockchain
 ```
 $ python console.py account create
 ```
-- Run the miner.  
+- Run the miner
 ```
 $ python console.py miner start 3008
-``` 
+```
 - Transaction transfer.   
 ```
 $ python console.py tx transfer from_address to_address amount
-``` 
+```
 - Transaction list.   
 ```
 $ python console.py tx list
-``` 
+```
 - Blockchain shows.   
 ```
 $ python console.py blockchain list
-``` 
+```
 ### Node Network
 Copy the code resource to a new directory.While the miner before was running then:
 ```
 $ cd {another_blockchain_directory}
-$ python console.py node add 3008 # The 3008 represent the miner we start before, if you use two machine to start node , the 3008 should be YOUR_IP:3008
+$ python console.py node add 3008 
 $ python console.py node run 3009
 ```
 When a new block mined , block and transactions will broadcast to other nodes.
 
 ## All command
-Use like this:
+Use like this:   
+
 ```
 $ python console.py [module] [action] params...
 ```
 Such as:
 ```
 $ python console.py tx list
-``` 
+```
 
-Module | Action | Params | Desc
-- | :-: |:-: | -:
-account | create| NONEED | Create new account 
-account | get | NONEED | Show all account
-account | current | NONEED | The miner reward account 
-miner | start | ip:port/port | Such as 3008 or 127.0.0.1:3008
-node | run | ip:port/port | Such as 3008 or 127.0.0.1:3008
-node | list | NONEED | Show all node that will broadcast to 
-node | add | ip:port | Add a node that will broadcast to 
-tx | transfer | from_address to_address amount | Transfer coin from from_address to to_address
-tx | list | NONEED | Show all transactions 
+|  Module  |  Action    |  Params                            |  Desc                                            |
+|----------|------------|------------------------------------|--------------------------------------------------|
+| account  |  create    |  NONEED                            |  Create new account                              |
+| account  |  get       |  NONEED                            |  Show all account                                |
+| account  |  current   |  NONEED                            |  The miner reward account                        |
+| miner    |  start     |  ip:port/port                      |  Such as 3008 or 127.0.0.1:3008                  |
+| node     |  run       |  ip:port/port                      |  Such as 3008 or 127.0.0.1:3008                  |
+| node     |  list      |  NONEED                            |  Show all node that will broadcast   to          |
+| node     |  add       |  ip:port                           |  Add a node that will broadcast   to             |
+| tx       |  transfer  |  from_address to_address   amount  |  Transfer coin from from_address to   to_address |
+| tx       |  list      |  NONEED                            |  Show all transactions                           |
 
 # Introduce 
 ## About block
