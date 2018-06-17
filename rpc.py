@@ -21,7 +21,7 @@ class RpcServer():
         return bcdb.find_all()
 
     def new_block(self,block):
-        cprint(__name__, block)
+        cprint('RPC', block)
         BlockChainDB().insert(block)
         UnTransactionDB().clear()
         cprint('INFO',"Receive new block.")
