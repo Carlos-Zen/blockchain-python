@@ -39,7 +39,7 @@ class Block(Model):
         Block hash generate.
         """        
         header_hash = self.header_hash()
-        token = f'{header_hash}{nouce}'.encode('utf-8')
+        token = ''.join((header_hash, nouce)).encode('utf-8')
         return hashlib.sha256(token).hexdigest()
 
     def valid(self, nouce):
