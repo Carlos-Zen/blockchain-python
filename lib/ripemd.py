@@ -52,7 +52,7 @@ digestsize = 20
 
 try:
     range = xrange
-except:
+except NameError:
     pass
 
 class RIPEMD160:
