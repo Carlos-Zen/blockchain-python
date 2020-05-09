@@ -3,11 +3,11 @@ import json
 import os
 
 BASEDBPATH = 'data'
-BLOCKFILE = 'blockchain'
-TXFILE = 'tx'
-UNTXFILE = 'untx'
-ACCOUNTFILE = 'account'
-NODEFILE = 'node'
+BLOCKFILE = 'blockchain.json'
+TXFILE = 'tx.json'
+UNTXFILE = 'untx.json'
+ACCOUNTFILE = 'account.json'
+NODEFILE = 'node.json'
 
 class BaseDB():
 
@@ -45,7 +45,7 @@ class BaseDB():
         else:
             data.append(item)
         with open(self.filepath,'w+') as f:
-            f.write(json.dumps(data))
+            f.write(json.dumps(data, indent=4))
         return True
 
     def clear(self):
