@@ -2,20 +2,21 @@
 import json
 import os
 
-BASEDBPATH = 'data'
-BLOCKFILE = 'blockchain'
-TXFILE = 'tx'
-UNTXFILE = 'untx'
-ACCOUNTFILE = 'account'
-NODEFILE = 'node'
+BASEDBPATH = "data"
+BLOCKFILE = "blockchain"
+TXFILE = "tx"
+UNTXFILE = "untx"
+ACCOUNTFILE = "account"
+NODEFILE = "node"
 
-class BaseDB():
 
-    filepath = ''
+class BaseDB:
+
+    filepath = ""
 
     def __init__(self):
         self.set_path()
-        self.filepath = '/'.join((BASEDBPATH, self.filepath))
+        self.filepath = "/".join((BASEDBPATH, self.filepath))
 
     def set_path(self):
         pass
@@ -24,13 +25,13 @@ class BaseDB():
         return self.read()
 
     def insert(self, item):
-        self.write(item)  
+        self.write(item)
 
     def read(self):
-        raw = ''
+        raw = ""
         if not os.path.exists(self.filepath):
             return []
-        with open(self.filepath,'r+') as f:
+        with open(self.filepath, "r+") as f:
             raw = f.readline()
         if len(raw) > 0:
             data = json.loads(raw)
@@ -40,36 +41,36 @@ class BaseDB():
 
     def write(self, item):
         data = self.read()
-        if isinstance(item,list):
+        if isinstance(item, list):
             data = data + item
         else:
             data.append(item)
-        with open(self.filepath,'w+') as f:
+        with open(self.filepath, "w+") as f:
             f.write(json.dumps(data))
         return True
 
     def clear(self):
-        with open(self.filepath,'w+') as f:
-            f.write('')
+        with open(self.filepath, "w+") as f:
+            f.write("")
 
     def hash_insert(self, item):
         exists = False
         for i in self.find_all():
-            if item['hash'] == i['hash']:
+            if item["hash"] == i["hash"]:
                 exists = True
                 break
         if not exists:
-            self.write(item)  
+            self.write(item)
+
 
 class NodeDB(BaseDB):
-
     def set_path(self):
-        self.filepath = NODEFILE  
+        self.filepath = NODEFILE
 
 
 class AccountDB(BaseDB):
     def set_path(self):
-        self.filepath = ACCOUNTFILE  
+        self.filepath = ACCOUNTFILE
 
     def find_one(self):
         ac = self.read()
@@ -77,7 +78,6 @@ class AccountDB(BaseDB):
 
 
 class BlockChainDB(BaseDB):
-
     def set_path(self):
         self.filepath = BLOCKFILE
 
@@ -91,7 +91,7 @@ class BlockChainDB(BaseDB):
     def find(self, hash):
         one = {}
         for item in self.find_all():
-            if item['hash'] == hash:
+            if item["hash"] == hash:
                 one = item
                 break
         return one
@@ -99,36 +99,40 @@ class BlockChainDB(BaseDB):
     def insert(self, item):
         self.hash_insert(item)
 
+
 class TransactionDB(BaseDB):
     """
     Transactions that save with blockchain.
     """
+
     def set_path(self):
         self.filepath = TXFILE
 
     def find(self, hash):
         one = {}
         for item in self.find_all():
-            if item['hash'] == hash:
+            if item["hash"] == hash:
                 one = item
                 break
         return one
 
     def insert(self, txs):
-        if not isinstance(txs,list):
+        if not isinstance(txs, list):
             txs = [txs]
         for tx in txs:
             self.hash_insert(tx)
+
 
 class UnTransactionDB(TransactionDB):
     """
     Transactions that doesn't store in blockchain.
     """
+
     def set_path(self):
         self.filepath = UNTXFILE
 
     def all_hashes(self):
         hashes = []
         for item in self.find_all():
-            hashes.append(item['hash'])
+            hashes.append(item["hash"])
         return hashes

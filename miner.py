@@ -9,10 +9,12 @@ from lib.common import unlock_sig, lock_sig
 MAX_COIN = 21000000
 REWARD = 20
 
+
 def reward():
-    reward = Vout(get_account()['address'], REWARD)
+    reward = Vout(get_account()["address"], REWARD)
     tx = Transaction([], reward)
     return tx
+
 
 def coinbase():
     """
@@ -27,8 +29,10 @@ def coinbase():
     TransactionDB().insert(rw.to_dict())
     return cb
 
+
 def get_all_untransactions():
     UnTransactionDB().all_hashes()
+
 
 def mine():
     """
@@ -49,8 +53,10 @@ def mine():
     untxdb.clear()
 
     # Miner reward is the first transaction.
-    untx_hashes.insert(0,rw.hash)
-    cb = Block( last_block['index'] + 1, int(time.time()), untx_hashes, last_block['hash'])
+    untx_hashes.insert(0, rw.hash)
+    cb = Block(
+        last_block["index"] + 1, int(time.time()), untx_hashes, last_block["hash"]
+    )
     nouce = cb.pow()
     cb.make(nouce)
     # Save block and transactions to database.
